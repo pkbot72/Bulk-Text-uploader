@@ -29,7 +29,7 @@ load_dotenv()
 os.makedirs("./downloads", exist_ok=True)
 API_ID = 952608
 API_HASH = "8d8d0ad8e3d4bcd54420190f57da78ad"
-BOT_TOKEN = "6355112108:AAGwzt9JQTOoK8ZGtc2gTFKGpiCIr6RFR0U"
+BOT_TOKEN = "6615719407:AAEiTUDx9wZEu61Cf3c7kr_iW0BGDy347PA"
 AUTH_USERS = 818269274
 sudo_users = [818269274]
 bot = Client(
@@ -838,20 +838,31 @@ async def account_login(bot: Client, m: Message):
     input0: Message = await bot.listen(editable.chat.id)
     raw_text0 = input0.text
     
-    await m.reply_text("**Enter resolution**")
+    await m.reply_text("**Enter Resolution Quality**🥊\n\n Eg:- 720 or 480 or 360...without P")
     input2: Message = await bot.listen(editable.chat.id)
     raw_text2 = input2.text
-
-    editable4= await m.reply_text("Now send the **Thumb url**\nEg : ```https://telegra.ph/file/d9e24878bd4aba05049a1.jpg```\n\nor Send **no**")
-    input6 = message = await bot.listen(editable.chat.id)
-    raw_text6 = input6.text
-
-    thumb = input6.text
-    if thumb.startswith("http://") or thumb.startswith("https://"):
-        getstatusoutput(f"wget '{thumb}' -O 'thumb.jpg'")
-        thumb = "thumb.jpg"
+    raw_text6 = "no"
+    thumb = "no"
+    res = "NA"
+   
+    
+  
+    if raw_text2 == '1280' or (raw_text2.isdigit() and 1200 <= int(raw_text2) <= 1300):
+       format_filter = 'bestvideo[height>=1200][height<=1300]+bestaudio/best[height>=1200][height<=1300],854,720,480,360,best'
+    elif raw_text2 == '854' or (raw_text2.isdigit() and 800 <= int(raw_text2) <= 900):
+       format_filter = 'bestvideo[height>=800][height<=900]+bestaudio/best[height>=800][height<=900],720,480,360,1280,best'
+    elif raw_text2 == '720' or (raw_text2.isdigit() and 700 <= int(raw_text2) <= 800):
+       format_filter = 'bestvideo[height>=700][height<=800]+bestaudio/best[height>=700][height<=800],854,480,360,1280,best'
+    elif raw_text2 == '480' or (raw_text2.isdigit() and 400 <= int(raw_text2) <= 500):
+       format_filter = 'bestvideo[height>=400][height<=500]+bestaudio/best[height>=400][height<=500],720,854,1280,best'
+    elif raw_text2 == '360' or (raw_text2.isdigit() and 300 <= int(raw_text2) <= 400):
+       format_filter = 'bestvideo[height>=300][height<=400]+bestaudio/best[height>=300][height<=400],480,720,854,1280,best'
+    elif raw_text2 == '240' or (raw_text2.isdigit() and 200 <= int(raw_text2) <= 300):
+       format_filter = 'bestvideo[height>=200][height<=300]+bestaudio/best[height>=200][height<=300],360,480,720,854,1280,best'
+    elif raw_text2 == '180' or (raw_text2.isdigit() and 100 <= int(raw_text2) <= 200):
+       format_filter = 'bestvideo[height>=100][height<=200]+bestaudio/best[height>=100][height<=200],240,360,480,720,854,1280,best'
     else:
-        thumb == "no"
+       format_filter = 'best'
         
     if raw_text =='0':
         count =1
@@ -896,7 +907,8 @@ async def account_login(bot: Client, m: Message):
             if "pdf" in url:
                 cmd = f'yt-dlp -o "{name}.pdf" "{url1}"'
             else:
-                cmd = f'yt-dlp -o "{name}.mp4" --no-keep-video --no-check-certificate --remux-video mkv "{url1}"'
+                cmd = f'yt-dlp -o "{name}.%(ext)s" -f "{format_filter}" --no-keep-video --no-check-certificate --remux-video mkv "{url}"'
+                #cmd = f'yt-dlp -o "{name}.mp4" --no-keep-video --no-check-certificate --remux-video mkv "{url1}"'
             try:
                 print("❤❤❤❤❤")
                 download_cmd = f"{cmd} -R 25 --fragment-retries 25 --external-downloader aria2c --downloader-args 'aria2c: -x 16 -j 32'"
